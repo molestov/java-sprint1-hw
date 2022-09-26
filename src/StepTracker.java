@@ -3,72 +3,75 @@ import java.util.Arrays;
 public class StepTracker {
 
     int stepsGoal = 10000;
+    Converter converter = new Converter();
+    MonthData[] MonthData = new MonthData[12];
 
-    //Добавляем данные за день
-    public void addMonthValue(int monthNum, int dayNum, int dayValue, monthData[] monthData) {
-        monthData[monthNum].days[dayNum-1] = dayValue;
+    public StepTracker() {
+        for (int i = 0; i < MonthData.length; i++) {
+            MonthData[i] = new MonthData();
+        }
     }
 
-    //Проверяем ввод пользователя на отрицательное значение
+    public void saveDaySteps(int monthNum, int dayNum, int dayValue) {
+        MonthData[monthNum].days[dayNum - 1] = dayValue;
+    }
+
     public boolean checkUserInput(int userInput) {
-        if(userInput > 0) return true;
-        else return false;
+        return userInput > 0;
     }
 
-    //Вводим новую цель по шагам
     public void editStepsGoal(int stepsGoal) {
-        if(checkUserInput(stepsGoal)) {
+        if (checkUserInput(stepsGoal)) {
             this.stepsGoal = stepsGoal;
         } else {
             System.out.println("Введено неверное значение");
         }
     }
 
-    //Выводим данные за каждый день в опередленном месяце
-    public void printStepsNumByDays(int monthNum, monthData[] monthData){
+    public void printStepsNumByDays(int monthNum){
         System.out.println("Шаги по дням: ");
-        for(int i = 0; i < monthData[monthNum].days.length; i++) {
-            System.out.println(i + 1 + " день: " + monthData[monthNum].days[i]);
+        for(int i = 0; i < MonthData[monthNum].days.length; i++) {
+            System.out.println(i + 1 + " день: " + MonthData[monthNum].days[i]);
         }
     }
-    //Выводим сумму всех шагов за месяц
-    public int printSumOfStepsByMonth(int monthNum, monthData[] monthData) {
+
+    public int printSumOfStepsByMonth(int monthNum) {
         int sumOfSteps = 0;
-        for(int i=0; i < monthData[monthNum].days.length; i++) {
-            sumOfSteps += monthData[monthNum].days[i];
+        for(int i=0; i < MonthData[monthNum].days.length; i++) {
+            sumOfSteps += MonthData[monthNum].days[i];
         }
         return sumOfSteps;
     }
-    //Ищем максимальное значение шагов за месяц
-    public void printMaxSteps(int monthNum, monthData[] monthData) {
-        int maxValue = Arrays.stream(monthData[monthNum].days).max().getAsInt();
+
+    public void printMaxSteps(int monthNum) {
+        int maxValue = Arrays.stream(MonthData[monthNum].days)
+                .max()
+                .getAsInt();
         System.out.println("Макисмальное колличество шагов: " + maxValue);
     }
-    //Выводим среднее значение по шагам за месяц
-    public void printAverageStepsNum(int monthNum, monthData[] monthData) {
-        int averageStepsNum = printSumOfStepsByMonth(monthNum, monthData) / monthData[monthNum].days.length;
+
+    public void printAverageStepsNum(int monthNum) {
+        int averageStepsNum = printSumOfStepsByMonth(monthNum) / MonthData[monthNum].days.length;
         System.out.println("Среднее колличество шагов за месяц: " + averageStepsNum);
     }
-    //Выводим пройденное расстояние в киллометрах
-    public void printKm(int monthNum, monthData[] monthData) {
-        Converter converter = new Converter();
-        double km = converter.stepsToKm(printSumOfStepsByMonth(monthNum, monthData));
+
+    public void printKm(int monthNum) {
+        double km = converter.stepsToKm(printSumOfStepsByMonth(monthNum));
         System.out.println("Пройдено за месяц киллометров: " + km);
     }
-    //Считаем сожженые каллории
-    public void printCalories(int monthNum, monthData[] monthData) {
-        Converter converter = new Converter();
-        double cal = converter.stepsToCalories(printSumOfStepsByMonth(monthNum, monthData));
+
+    public void printCalories(int monthNum) {
+        double cal = converter.stepsToCalories(printSumOfStepsByMonth(monthNum));
         System.out.println("Сожжено за месяц киллокалорий: " + cal);
     }
-    //Ищем лучшую серию за месяц
-    public void printBestSeries(int monthNum, StepTracker stepTracker, monthData[] monthData) {
+
+    public void printBestSeries(int monthNum) {
         int maxFoundedSeries = 0;
         int maxFounded = 0;
-        for(int i=0; i < monthData[monthNum].days.length; i++) {
-            if (monthData[monthNum].days[i] >= stepTracker.stepsGoal) {
+        for (int i = 0; i < MonthData[monthNum].days.length; i++) {
+            if (MonthData[monthNum].days[i] >= stepsGoal) {
                 maxFounded++;
-                if(maxFoundedSeries<maxFounded) {
+                if (maxFoundedSeries < maxFounded) {
                     maxFoundedSeries = maxFounded;
                 }
             } else {

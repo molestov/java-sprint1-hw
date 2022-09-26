@@ -1,10 +1,9 @@
 public class Converter {
-    public static double stepsToKm(int steps) {
-        double result = steps * 0.00075;
-        return result;
+    public double stepsToKm(int steps) {
+        return steps * 0.00075;
     }
-    public static double stepsToCalories(int steps) {
-        double result = steps * 0.05;
-        return result;
+
+    public double stepsToCalories(int steps) {
+        return steps * 0.05;
     }
 }
